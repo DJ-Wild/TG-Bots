@@ -4,21 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WebApp - Студия</title>
+    <script src="https://telegram.org/js/telegram-web-app.js?56"></script> <!-- Подключаем Telegram WebApp JS -->
+
     <style>
+        /* Основные стили */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif;
             text-align: center;
-            background-color: #f0f0f0;
+            background-color: #f5f5f5;
             margin: 0;
             padding: 0;
         }
 
-        #welcome, #nickname-page, #pin-page {
-            display: none;
-        }
-
         .container {
             padding: 20px;
+            max-width: 480px;
+            margin: 0 auto;
         }
 
         .hidden {
@@ -26,9 +27,24 @@
         }
 
         .error-message {
-            color: red;
-            font-size: 18px;
+            color: #e74c3c;
+            font-size: 16px;
             margin: 10px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #0088cc;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0077b5;
         }
 
         .pin-input {
@@ -41,49 +57,70 @@
             width: 20px;
             height: 20px;
             border-radius: 50%;
-            border: 1px solid #333;
+            border: 1px solid #ccc;
             margin: 0 5px;
         }
 
         .circle.filled {
-            background-color: #333;
+            background-color: #0088cc;
         }
 
         .keyboard {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
+            margin-top: 20px;
         }
 
         .key {
             width: 60px;
             height: 60px;
             margin: 10px;
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
-            background-color: #007BFF;
+            background-color: #0088cc;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
+            transition: background-color 0.3s;
+        }
+
+        .key:hover {
+            background-color: #0077b5;
         }
 
         .key:active {
-            background-color: #0056b3;
+            background-color: #005f8b;
         }
 
+        /* Стили для WebApp кнопок Telegram */
+        .tg-button {
+            padding: 12px 20px;
+            background-color: #0088cc;
+            color: white;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .tg-button:hover {
+            background-color: #0077b5;
+        }
     </style>
 </head>
 <body>
 
 <div id="welcome" class="container">
     <h1>Привет! Добро пожаловать в нашу студию</h1>
-    <button onclick="showNicknamePage()">Начнем</button>
+    <button class="tg-button" onclick="showNicknamePage()">Начнем</button>
 </div>
 
 <div id="nickname-page" class="container">
     <h2>Введите ваш никнейм</h2>
-    <input type="text" id="nickname-input" placeholder="Ваш никнейм">
-    <button onclick="checkNickname()">Продолжить</button>
+    <input type="text" id="nickname-input" placeholder="Ваш никнейм" style="width: 100%; padding: 10px; font-size: 16px; border-radius: 5px; border: 1px solid #ccc; margin: 10px 0;">
+    <button class="tg-button" onclick="checkNickname()">Продолжить</button>
     <p id="error-message" class="error-message hidden">Уппс! Никнейм не верный</p>
 </div>
 
