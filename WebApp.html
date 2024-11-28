@@ -1,10 +1,192 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebApp - Студия</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+
+        #welcome, #nickname-page, #pin-page {
+            display: none;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .pin-input {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .circle {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1px solid #333;
+            margin: 0 5px;
+        }
+
+        .circle.filled {
+            background-color: #333;
+        }
+
+        .keyboard {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .key {
+            width: 60px;
+            height: 60px;
+            margin: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .key:active {
+            background-color: #0056b3;
+        }
+
+    </style>
 </head>
 <body>
+
+<div id="welcome" class="container">
+    <h1>Привет! Добро пожаловать в нашу студию</h1>
+    <button onclick="showNicknamePage()">Начнем</button>
+</div>
+
+<div id="nickname-page" class="container">
+    <h2>Введите ваш никнейм</h2>
+    <input type="text" id="nickname-input" placeholder="Ваш никнейм">
+    <button onclick="checkNickname()">Продолжить</button>
+    <p id="error-message" class="error-message hidden">Уппс! Никнейм не верный</p>
+</div>
+
+<div id="pin-page" class="container">
+    <h2>Введите ПИН-код</h2>
+    <div class="pin-input">
+        <div class="circle" id="circle-1"></div>
+        <div class="circle" id="circle-2"></div>
+        <div class="circle" id="circle-3"></div>
+        <div class="circle" id="circle-4"></div>
+    </div>
+    <div class="keyboard">
+        <button class="key" onclick="enterDigit(1)">1</button>
+        <button class="key" onclick="enterDigit(2)">2</button>
+        <button class="key" onclick="enterDigit(3)">3</button>
+        <button class="key" onclick="enterDigit(4)">4</button>
+        <button class="key" onclick="enterDigit(5)">5</button>
+        <button class="key" onclick="enterDigit(6)">6</button>
+        <button class="key" onclick="enterDigit(7)">7</button>
+        <button class="key" onclick="enterDigit(8)">8</button>
+        <button class="key" onclick="enterDigit(9)">9</button>
+        <button class="key" onclick="enterDigit(0)">0</button>
+    </div>
+</div>
+
+<script>
+    let attempts = 0;
+    const maxAttempts = 3;
+    const blockTime = 60 * 60 * 1000; // 1 час в миллисекундах
+    let lockUntil = localStorage.getItem('lockUntil') || 0;
+
+    function showWelcome() {
+        document.getElementById('welcome').style.display = 'block';
+    }
+
+    function showNicknamePage() {
+        document.getElementById('welcome').style.display = 'none';
+        document.getElementById('nickname-page').style.display = 'block';
+    }
+
+    function checkNickname() {
+        const nickname = document.getElementById('nickname-input').value.trim();
+        const validNicknames = ['DJ_Wild', 'Dersir'];
+
+        if (validNicknames.includes(nickname)) {
+            showPinPage();
+        } else {
+            attempts++;
+            if (attempts >= maxAttempts) {
+                lockApp();
+                return;
+            }
+            const errorMsg = document.getElementById('error-message');
+            errorMsg.classList.remove('hidden');
+            setTimeout(() => errorMsg.classList.add('hidden'), 5000);
+        }
+    }
+
+    function lockApp() {
+        lockUntil = Date.now() + blockTime;
+        localStorage.setItem('lockUntil', lockUntil);
+        alert('Вы заблокированы на 1 час!');
+    }
+
+    function showPinPage() {
+        document.getElementById('nickname-page').style.display = 'none';
+        document.getElementById('pin-page').style.display = 'block';
+    }
+
+    let pinCode = '';
+    const correctPin = '1234';
+
+    function enterDigit(digit) {
+        if (pinCode.length < 4) {
+            pinCode += digit;
+            document.getElementById(`circle-${pinCode.length}`).classList.add('filled');
+
+            if (pinCode.length === 4) {
+                if (pinCode === correctPin) {
+                    alert('ПИН-код правильный!');
+                } else {
+                    alert('Неправильный ПИН-код!');
+                    resetPin();
+                }
+            }
+        }
+    }
+
+    function resetPin() {
+        pinCode = '';
+        for (let i = 1; i <= 4; i++) {
+            document.getElementById(`circle-${i}`).classList.remove('filled');
+        }
+    }
+
+    window.onload = function() {
+        if (Date.now() < lockUntil) {
+            alert('Вы заблокированы!');
+        } else {
+            showWelcome();
+        }
+    };
+</script>
 
 </body>
 </html>
